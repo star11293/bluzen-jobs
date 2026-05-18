@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Bluzen Jobs{% endblock %}
+
+{% block content %}
+<section class="bg-surface-soft py-16">
+  <div class="max-w-lg mx-auto px-5">
+    <div class="bg-white rounded-xl shadow-card p-8">
+      <h1 class="text-2xl font-bold text-brand-navy mb-1">Create your account</h1>
+      <p class="text-gray-500 text-sm mb-6">Takes less than a minute.</p>
+
+      <form method="post" class="space-y-5" novalidate>
+        {% csrf_token %}
+
+        <!-- Role selector -->
+        <fieldset>
+          <legend class="block text-sm font-medium text-gray-700 mb-2">I'm signing up as a...</legend>
+          <div class="space-y-2">
+            {% for radio in form.role %}
+              <label class="flex items-start p-4 border border-gray-200 rounded-md cursor-pointer hover:border-brand-blue has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue/5 transition">
+                <span class="mt-0.5">{{ radio.tag }}</span>
+                <span class="ml-3 text-sm text-gray-800">{{ radio.choice_label }}</span>
+              </label>
+            {% endfor %}
+          </div>
+          {% if form.role.errors %}<p class="text-red-600 text-xs mt-1">{{ form.role.errors.0 }}</p>{% endif %}
+        </fieldset>
+
+        <!-- Name row -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">First name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<p class="text-red-600 text-xs mt-1">{{ form.first_name.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Last name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<p class="text-red-600 text-xs mt-1">{{ form.last_name.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          {{ form.email }}
+          {% if form.email.errors %}<p class="text-red-600 text-xs mt-1">{{ form.email.errors.0 }}</p>{% endif %}
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            Phone <span class="text-gray-400 font-normal">(optional)</span>
+          </label>
+          {{ form.phone }}
+          {% if form.phone.errors %}<p class="text-red-600 text-xs mt-1">{{ form.phone.errors.0 }}</p>{% endif %}
+        </div>
+
+        <!-- Company name (employer only) -->
+        <div id="companyField" class="hidden">
+          <label for="{{ form.company_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Company name</label>
+          {{ form.company_name }}
+          {% if form.company_name.errors %}<p class="text-red-600 text-xs mt-1">{{ form.company_name.errors.0 }}</p>{% endif %}
+        </div>
+
+        <!-- Passwords -->
+        <div>
+          <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          {{ form.password1 }}
+          {% if form.password1.help_text %}<p class="text-xs text-gray-500 mt-1">{{ form.password1.help_text|safe }}</p>{% endif %}
+          {% if form.password1.errors %}<p class="text-red-600 text-xs mt-1">{{ form.password1.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Confirm password</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}<p class="text-red-600 text-xs mt-1">{{ form.password2.errors.0 }}</p>{% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="bg-red-50 border border-red-200 text-red-800 rounded-md p-3 text-sm">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <button type="submit"
+                class="w-full bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-2.5 rounded-md transition shadow-sm hover:shadow">
+          Create account
+        </button>
+      </form>
+
+      <p class="text-sm text-gray-500 text-center mt-6">
+        Already have an account?
+        <a href="{% url 'accounts:login' %}" class="text-brand-blue hover:text-brand-blue-dark hover:underline font-medium">Log in</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleCompanyField() {
+    const employerRadio = document.querySelector('input[name="role"][value="employer"]');
+    const companyField = document.getElementById('companyField');
+    if (employerRadio && employerRadio.checked) {
+      companyField.classList.remove('hidden');
+    } else {
+      companyField.classList.add('hidden');
+    }
+  }
+  document.querySelectorAll('input[name="role"]').forEach(r => r.addEventListener('change', toggleCompanyField));
+  document.addEventListener('DOMContentLoaded', toggleCompanyField);
+  // Also run immediately in case DOMContentLoaded already fired.
+  toggleCompanyField();
+</script>
+{% endblock %}

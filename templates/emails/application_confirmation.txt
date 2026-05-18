@@ -1,0 +1,13 @@
+Hi {{ applicant.get_short_name }},
+
+We've received your application for {{ job.title }} ({{ job.location }}).
+
+The employer will review your application and reach out if there's a fit.
+You can track the status here:
+{{ dashboard_url }}
+
+Job details:
+{{ job_url }}
+
+Best of luck,
+The Bluzen team

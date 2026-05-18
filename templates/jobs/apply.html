@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Apply for {{ job.title }} - Bluzen Jobs{% endblock %}
+
+{% block content %}
+<section class="bg-surface-soft py-12">
+  <div class="max-w-2xl mx-auto px-5">
+    <a href="{% url 'jobs:detail' job.pk %}" class="text-sm text-brand-blue hover:underline inline-flex items-center gap-1 mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Back to job
+    </a>
+
+    <!-- Job summary card -->
+    <div class="bg-white rounded-xl shadow-card p-6 mb-5">
+      <span class="inline-block text-xs font-medium px-2 py-1 rounded bg-brand-blue/10 text-brand-blue mb-2">
+        {{ job.get_job_type_display }}
+      </span>
+      <h1 class="text-xl font-bold text-brand-navy mb-1">Apply for {{ job.title }}</h1>
+      <p class="text-sm text-gray-600">{{ job.location }}</p>
+    </div>
+
+    <!-- Application form -->
+    <div class="bg-white rounded-xl shadow-card p-6 md:p-8">
+      <form method="post" enctype="multipart/form-data" class="space-y-5">
+        {% csrf_token %}
+
+        <div>
+          <label for="{{ form.cover_letter.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            Cover letter <span class="text-gray-400 font-normal">(optional)</span>
+          </label>
+          {{ form.cover_letter }}
+          {% if form.cover_letter.errors %}<p class="text-red-600 text-xs mt-1">{{ form.cover_letter.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div>
+          <label for="{{ form.resume.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+            Resume <span class="text-red-500">*</span>
+          </label>
+          {{ form.resume }}
+          <p class="text-xs text-gray-500 mt-2">PDF, DOC, or DOCX. Max 5 MB.</p>
+          {% if form.resume.errors %}<p class="text-red-600 text-xs mt-1">{{ form.resume.errors.0 }}</p>{% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="bg-red-50 border border-red-200 text-red-800 rounded-md p-3 text-sm">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+          <a href="{% url 'jobs:detail' job.pk %}" class="text-center text-gray-700 border border-gray-300 hover:bg-gray-50 px-6 py-2.5 rounded-md transition font-medium">
+            Cancel
+          </a>
+          <button type="submit" class="flex-1 bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-2.5 rounded-md transition shadow-sm hover:shadow">
+            Submit application
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+Hi {{ job.employer.get_short_name }},
+
+You've got a new application.
+
+Job:       {{ job.title }}
+Location:  {{ job.location }}
+Applicant: {{ applicant.get_full_name }} ({{ applicant.email }})
+
+Review the application in your dashboard:
+{{ dashboard_url }}
+
+— Bluzen Healthcare Staffing
+{{ dashboard_url|cut:"/dashboard/employer/" }}

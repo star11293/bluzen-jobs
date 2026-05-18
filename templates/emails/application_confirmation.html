@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Application received: {{ job.title }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f9ff;font-family:'Helvetica Neue',Arial,sans-serif;color:#333;line-height:1.5;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f9ff;padding:30px 10px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background-color:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+          <tr>
+            <td style="background-color:#004080;padding:24px 30px;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;">Bluzen Healthcare Staffing</h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:30px;">
+              <h2 style="margin:0 0 12px;color:#004080;font-size:20px;">Application received</h2>
+              <p style="margin:0 0 20px;color:#555;font-size:15px;">
+                Hi {{ applicant.get_short_name }}, thanks for applying. We've sent your resume to the employer and they'll be in touch if there's a fit.
+              </p>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f9ff;border-radius:8px;padding:0;margin-bottom:24px;">
+                <tr>
+                  <td style="padding:18px 20px;">
+                    <p style="margin:0 0 6px;color:#666;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Position</p>
+                    <p style="margin:0 0 14px;color:#004080;font-size:16px;font-weight:600;">{{ job.title }}</p>
+
+                    <p style="margin:0 0 6px;color:#666;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Location</p>
+                    <p style="margin:0;color:#333;font-size:14px;">{{ job.location }}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 8px;color:#333;font-size:15px;">Track this application's status:</p>
+              <p style="margin:0 0 24px;">
+                <a href="{{ dashboard_url }}" style="display:inline-block;background-color:#0073e6;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;font-weight:600;font-size:15px;">
+                  My applications
+                </a>
+              </p>
+
+              <p style="margin:0;color:#999;font-size:13px;">
+                Best of luck — the Bluzen team
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color:#f4f9ff;padding:20px 30px;text-align:center;border-top:1px solid #e5e7eb;">
+              <p style="margin:0;color:#666;font-size:12px;">
+                © 2026 Bluzen Medical Healthcare Staffing Agency<br>
+                10911 Reisterstown Rd, Owings Mills, MD 21117
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

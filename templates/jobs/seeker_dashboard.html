@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications - Bluzen{% endblock %}
+
+{% block content %}
+<section class="bg-surface-soft py-10">
+  <div class="max-w-6xl mx-auto px-5">
+    <h1 class="text-3xl font-bold text-brand-navy">Your applications</h1>
+    <p class="text-gray-600 mt-1">Track the status of every job you've applied to.</p>
+  </div>
+</section>
+
+<section class="bg-white py-10">
+  <div class="max-w-6xl mx-auto px-5">
+    {% if applications %}
+      <div class="space-y-4">
+        {% for app in applications %}
+          <div class="bg-white border border-gray-200 rounded-xl p-6 hover:border-brand-blue hover:shadow-card transition">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-2">
+                  {% if app.status == 'submitted' %}
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded bg-blue-100 text-blue-800">Submitted</span>
+                  {% elif app.status == 'reviewing' %}
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded bg-purple-100 text-purple-800">Under review</span>
+                  {% elif app.status == 'interviewing' %}
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-800">Interviewing</span>
+                  {% elif app.status == 'offered' %}
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded bg-green-100 text-green-800">Offer extended</span>
+                  {% elif app.status == 'hired' %}
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded bg-green-100 text-green-800">Hired</span>
+                  {% elif app.status == 'rejected' %}
+                    <span class="inline-block text-xs font-medium px-2 py-0.5 rounded bg-gray-100 text-gray-700">Not selected</span>
+                  {% endif %}
+                  <span class="text-xs text-gray-400">Applied {{ app.applied_at|date:"M j, Y" }}</span>
+                </div>
+                <h3 class="text-lg font-semibold text-brand-navy mb-1">{{ app.job.title }}</h3>
+                <p class="text-sm text-gray-600">{{ app.job.location }} · {{ app.job.get_job_type_display }}</p>
+              </div>
+              <a href="{% url 'jobs:detail' app.job.pk %}" class="text-sm text-brand-blue hover:underline whitespace-nowrap">
+                View job →
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-12 bg-surface-softer rounded-xl">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full text-brand-blue mb-4 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h2 class="text-xl font-semibold text-brand-navy mb-2">No applications yet</h2>
+        <p class="text-gray-600 mb-5">Browse open positions and apply to the ones that fit.</p>
+        <a href="{% url 'jobs:list' %}" class="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold px-6 py-2.5 rounded-md transition shadow-sm hover:shadow">
+          Browse jobs
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

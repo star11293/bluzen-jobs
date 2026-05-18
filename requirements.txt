@@ -1,0 +1,14 @@
+# Core
+Django>=5.1,<5.2
+psycopg[binary]>=3.2,<4.0
+django-environ>=0.11,<1.0
+
+# Static & serving
+whitenoise>=6.7,<7.0
+gunicorn>=23.0,<24.0
+
+# Email (via SendGrid SMTP - uses Django's built-in SMTP backend, no extra package needed)
+
+# Media uploads (Cloudinary)
+cloudinary>=1.41,<2.0
+django-cloudinary-storage>=0.3.0,<1.0
