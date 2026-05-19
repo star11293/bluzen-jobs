@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from .forms import JobApplicationForm, JobPostingForm
 from .models import JobApplication, JobPosting
@@ -201,3 +201,88 @@ class SeekerDashboardView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             .filter(applicant=self.request.user)
             .select_related("job", "job__employer")
         )
+
+
+class JobApplicationsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    """
+    Employer-facing: view all applications for one of their jobs.
+    Resume links, cover letters, applicant email, and an inline status form
+    all live here so the employer manages everything from one screen.
+    """
+
+    template_name = "jobs/job_applications.html"
+    context_object_name = "applications"
+    paginate_by = 25
+
+    def test_func(self):
+        return getattr(self.request.user, "is_employer", False)
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return redirect("home")
+        return super().handle_no_permission()
+
+    def get_job(self):
+        # Cached so we don't re-query in get_queryset and get_context_data.
+        if not hasattr(self, "_job"):
+            self._job = get_object_or_404(
+                JobPosting,
+                pk=self.kwargs["pk"],
+                employer=self.request.user,
+            )
+        return self._job
+
+    def get_queryset(self):
+        return (
+            JobApplication.objects
+            .filter(job=self.get_job())
+            .select_related("applicant")
+            .order_by("-created_at")
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["job"] = self.get_job()
+        ctx["status_choices"] = JobApplication.Status.choices
+        return ctx
+
+
+class ApplicationStatusUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+    POST-only endpoint to change an application's status from the applications
+    page. Ownership enforced via the queryset filter on employer.
+    """
+
+    model = JobApplication
+    fields = ["status"]
+    http_method_names = ["post"]
+
+    def test_func(self):
+        return getattr(self.request.user, "is_employer", False)
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return redirect("home")
+        return super().handle_no_permission()
+
+    def get_queryset(self):
+        # An employer can only mutate applications to jobs they own.
+        return JobApplication.objects.filter(job__employer=self.request.user)
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        applicant_label = (
+            self.object.applicant.get_full_name() or self.object.applicant.email
+        )
+        messages.success(
+            self.request,
+            f"{applicant_label}'s application marked as {self.object.get_status_display()}.",
+        )
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Invalid status value.")
+        return redirect("jobs:job_applications", pk=self.object.job.pk)
+
+    def get_success_url(self):
+        return reverse("jobs:job_applications", kwargs={"pk": self.object.job.pk})

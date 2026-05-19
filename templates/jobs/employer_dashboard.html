@@ -40,10 +40,10 @@
                 <p class="text-sm text-gray-600">{{ job.location }}</p>
               </div>
               <div class="flex items-center gap-6">
-                <div class="text-center">
-                  <p class="text-2xl font-bold text-brand-blue">{{ job.applications.count }}</p>
+                <a href="{% url 'jobs:job_applications' job.pk %}" class="text-center group">
+                  <p class="text-2xl font-bold text-brand-blue group-hover:underline">{{ job.applications.count }}</p>
                   <p class="text-xs text-gray-500 uppercase tracking-wide">Applications</p>
-                </div>
+                </a>
                 <a href="{% url 'jobs:detail' job.pk %}" class="text-sm text-brand-blue hover:underline whitespace-nowrap">
                   View →
                 </a>

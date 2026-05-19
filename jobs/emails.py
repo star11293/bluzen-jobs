@@ -46,7 +46,7 @@ def send_application_to_employer(application) -> None:
         "job": job,
         "applicant": application.applicant,
         "application": application,
-        "dashboard_url": _absolute(reverse("jobs:employer_dashboard")),
+        "dashboard_url": _absolute(reverse("jobs:job_applications", args=[job.pk])),
     }
     _send(
         subject=f"New application: {job.title}",
