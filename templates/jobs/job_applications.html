@@ -44,7 +44,7 @@
                 <p class="text-sm text-gray-600">
                   <a href="mailto:{{ application.applicant.email }}" class="text-brand-blue hover:underline">{{ application.applicant.email }}</a>
                   <span class="text-gray-400 mx-1">·</span>
-                  Applied {{ application.created_at|date:"M j, Y" }}
+                  Applied {{ application.applied_at|date:"M j, Y" }}
                 </p>
               </div>
               <div class="flex items-center gap-2">

@@ -237,7 +237,7 @@ class JobApplicationsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             JobApplication.objects
             .filter(job=self.get_job())
             .select_related("applicant")
-            .order_by("-created_at")
+            .order_by("-applied_at")
         )
 
     def get_context_data(self, **kwargs):
