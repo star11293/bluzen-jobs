@@ -107,12 +107,19 @@ class JobApplyView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.job = self.job
         form.instance.applicant = self.request.user
         response = super().form_valid(form)
-        # Fire off notifications. Imported here to avoid a circular import at
-        # module load time. Errors are caught inside _send so the user never
-        # sees a 500 if SendGrid is having a bad day.
-        from .emails import send_application_confirmation, send_application_to_employer
-        send_application_to_employer(self.object)
-        send_application_confirmation(self.object)
+        # Fire off notifications. Wrapped in try/except as defense in depth so
+        # a SendGrid hiccup never breaks the user flow — the application is
+        # already saved by this point, we just can't tell people about it.
+        try:
+            from .emails import send_application_confirmation, send_application_to_employer
+            send_application_to_employer(self.object)
+            send_application_confirmation(self.object)
+        except Exception:
+            import logging
+            logging.getLogger(__name__).exception(
+                "Email notifications failed for application %s; application is saved.",
+                self.object.pk,
+            )
         messages.success(
             self.request,
             f"Application submitted for {self.job.title}. Good luck!",

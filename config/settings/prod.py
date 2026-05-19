@@ -48,16 +48,18 @@ STORAGES = {
 }
 
 # ---------------------------------------------------------------------------
-# Email via SendGrid SMTP
+# Email via SendGrid HTTP API (not SMTP)
 # ---------------------------------------------------------------------------
-INSTALLED_APPS = INSTALLED_APPS + ["cloudinary", "cloudinary_storage"]
+# We use SendGrid's HTTP API rather than SMTP because Render's free tier
+# unreliably allows outbound SMTP. HTTP runs over standard port 443 and
+# never has that problem. django-anymail wraps the SendGrid HTTP API in a
+# Django-native email backend.
+INSTALLED_APPS = INSTALLED_APPS + ["anymail", "cloudinary", "cloudinary_storage"]
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "apikey"  # literally the string "apikey", per SendGrid SMTP docs
-EMAIL_HOST_PASSWORD = env("SENDGRID_API_KEY")
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+ANYMAIL = {
+    "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
+}
 
 # ---------------------------------------------------------------------------
 # Cloudinary

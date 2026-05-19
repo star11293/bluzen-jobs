@@ -7,7 +7,8 @@ django-environ>=0.11,<1.0
 whitenoise>=6.7,<7.0
 gunicorn>=23.0,<24.0
 
-# Email (via SendGrid SMTP - uses Django's built-in SMTP backend, no extra package needed)
+# Email (via SendGrid HTTP API - works around Render free tier SMTP issues)
+django-anymail[sendgrid]>=12.0,<13.0
 
 # Media uploads (Cloudinary)
 cloudinary>=1.41,<2.0
