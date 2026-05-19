@@ -69,9 +69,9 @@
 
             <div class="flex flex-wrap items-center gap-3 pt-3 border-t border-gray-100">
               {% if application.resume %}
-                <a href="{{ application.resume.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-medium text-brand-blue hover:underline">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                  View resume
+                <a href="{{ application.resume.url }}" class="inline-flex items-center gap-2 text-sm font-medium text-brand-blue hover:underline">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                  Download resume
                 </a>
               {% else %}
                 <span class="text-sm text-gray-400">No resume attached</span>
@@ -82,7 +82,7 @@
                 Contact applicant
               </a>
 
-              <form method="post" action="{% url 'jobs:application_status' application.pk %}" class="ml-auto flex items-center gap-2">
+              <form method="post" action="{% url 'jobs:application_status' application.pk %}" class="w-full sm:w-auto sm:ml-auto flex flex-wrap items-center gap-2">
                 {% csrf_token %}
                 <label for="status-{{ application.pk }}" class="text-xs text-gray-500 uppercase tracking-wide">Set status</label>
                 <select id="status-{{ application.pk }}" name="status" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-blue/30">
